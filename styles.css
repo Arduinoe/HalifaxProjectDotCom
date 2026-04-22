@@ -526,8 +526,9 @@ body.menu-open .library__nav {
   cursor: pointer;
 }
 
-.cookie-banner[hidden] {
-  display: none;
+.cookie-banner[hidden],
+.cookie-banner.is-hidden {
+  display: none !important;
 }
 
 .cookie-banner {

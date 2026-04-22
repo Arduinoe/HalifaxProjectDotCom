@@ -133,13 +133,26 @@ const privacyDialog = document.querySelector('.privacy-dialog');
 const privacyClose = document.querySelector('.privacy-dialog__close');
 const privacyOpenButtons = document.querySelectorAll('[data-privacy-open]');
 
+const hideCookieBanner = () => {
+  if (!cookieBanner) return;
+  cookieBanner.hidden = true;
+  cookieBanner.classList.add('is-hidden');
+  cookieBanner.style.display = 'none';
+};
+
+if (cookieBanner && localStorage.getItem('halifax-cookie-notice') === 'accepted') {
+  hideCookieBanner();
+}
+
 if (cookieBanner && localStorage.getItem('halifax-cookie-notice') !== 'accepted') {
   cookieBanner.hidden = false;
+  cookieBanner.classList.remove('is-hidden');
+  cookieBanner.style.display = '';
 }
 
 cookieAccept?.addEventListener('click', () => {
   localStorage.setItem('halifax-cookie-notice', 'accepted');
-  cookieBanner.hidden = true;
+  hideCookieBanner();
 });
 
 privacyOpenButtons.forEach((button) => {
