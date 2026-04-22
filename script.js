@@ -126,3 +126,34 @@ linksPopover.addEventListener("click", (event) => {
     linksPopover.close();
   }
 });
+
+const cookieBanner = document.querySelector('[data-cookie-banner]');
+const cookieAccept = document.querySelector('[data-cookie-accept]');
+const privacyDialog = document.querySelector('.privacy-dialog');
+const privacyClose = document.querySelector('.privacy-dialog__close');
+const privacyOpenButtons = document.querySelectorAll('[data-privacy-open]');
+
+if (cookieBanner && localStorage.getItem('halifax-cookie-notice') !== 'accepted') {
+  cookieBanner.hidden = false;
+}
+
+cookieAccept?.addEventListener('click', () => {
+  localStorage.setItem('halifax-cookie-notice', 'accepted');
+  cookieBanner.hidden = true;
+});
+
+privacyOpenButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    privacyDialog.showModal();
+  });
+});
+
+privacyClose?.addEventListener('click', () => {
+  privacyDialog.close();
+});
+
+privacyDialog?.addEventListener('click', (event) => {
+  if (event.target === privacyDialog) {
+    privacyDialog.close();
+  }
+});
