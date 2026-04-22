@@ -12,6 +12,27 @@ const photoTiles = Array.from(document.querySelectorAll(".photo-tile"));
 const lazyImages = Array.from(document.querySelectorAll("img[data-src]"));
 let currentPhotoIndex = 0;
 
+const openDialog = (dialog) => {
+  if (!dialog) return;
+  if (typeof dialog.showModal === "function") {
+    dialog.showModal();
+    return;
+  }
+  dialog.setAttribute("open", "");
+  dialog.classList.add("is-open");
+  document.body.classList.add("dialog-open");
+};
+
+const closeDialog = (dialog) => {
+  if (!dialog) return;
+  if (typeof dialog.close === "function" && dialog.open) {
+    dialog.close();
+  }
+  dialog.removeAttribute("open");
+  dialog.classList.remove("is-open");
+  document.body.classList.remove("dialog-open");
+};
+
 function setMenu(open) {
   menuButton.setAttribute("aria-expanded", String(open));
   siteMenu.setAttribute("aria-hidden", String(!open));
@@ -91,7 +112,7 @@ function showPhoto(index) {
 photoTiles.forEach((tile, index) => {
   tile.addEventListener("click", () => {
     showPhoto(index);
-    lightbox.showModal();
+    openDialog(lightbox);
   });
 });
 
@@ -104,26 +125,26 @@ lightboxNext.addEventListener("click", () => {
 });
 
 lightboxClose.addEventListener("click", () => {
-  lightbox.close();
+  closeDialog(lightbox);
 });
 
 lightbox.addEventListener("click", (event) => {
   if (event.target === lightbox) {
-    lightbox.close();
+    closeDialog(lightbox);
   }
 });
 
 linksOpen.addEventListener("click", () => {
-  linksPopover.showModal();
+  openDialog(linksPopover);
 });
 
 linksClose.addEventListener("click", () => {
-  linksPopover.close();
+  closeDialog(linksPopover);
 });
 
 linksPopover.addEventListener("click", (event) => {
   if (event.target === linksPopover) {
-    linksPopover.close();
+    closeDialog(linksPopover);
   }
 });
 
@@ -133,6 +154,24 @@ const privacyDialog = document.querySelector('.privacy-dialog');
 const privacyClose = document.querySelector('.privacy-dialog__close');
 const privacyOpenButtons = document.querySelectorAll('[data-privacy-open]');
 
+const cookieStorageKey = 'halifax-cookie-notice';
+
+const getCookiePreference = () => {
+  try {
+    return window.localStorage.getItem(cookieStorageKey);
+  } catch (error) {
+    return null;
+  }
+};
+
+const setCookiePreference = (value) => {
+  try {
+    window.localStorage.setItem(cookieStorageKey, value);
+  } catch (error) {
+    // Safari private modes can block storage; the banner still closes for this page.
+  }
+};
+
 const hideCookieBanner = () => {
   if (!cookieBanner) return;
   cookieBanner.hidden = true;
@@ -140,33 +179,33 @@ const hideCookieBanner = () => {
   cookieBanner.style.display = 'none';
 };
 
-if (cookieBanner && localStorage.getItem('halifax-cookie-notice') === 'accepted') {
+if (cookieBanner && getCookiePreference() === 'accepted') {
   hideCookieBanner();
 }
 
-if (cookieBanner && localStorage.getItem('halifax-cookie-notice') !== 'accepted') {
+if (cookieBanner && getCookiePreference() !== 'accepted') {
   cookieBanner.hidden = false;
   cookieBanner.classList.remove('is-hidden');
   cookieBanner.style.display = '';
 }
 
 cookieAccept?.addEventListener('click', () => {
-  localStorage.setItem('halifax-cookie-notice', 'accepted');
+  setCookiePreference('accepted');
   hideCookieBanner();
 });
 
 privacyOpenButtons.forEach((button) => {
   button.addEventListener('click', () => {
-    privacyDialog.showModal();
+    openDialog(privacyDialog);
   });
 });
 
 privacyClose?.addEventListener('click', () => {
-  privacyDialog.close();
+  closeDialog(privacyDialog);
 });
 
 privacyDialog?.addEventListener('click', (event) => {
   if (event.target === privacyDialog) {
-    privacyDialog.close();
+    closeDialog(privacyDialog);
   }
 });
