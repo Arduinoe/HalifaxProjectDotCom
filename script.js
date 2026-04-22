@@ -9,6 +9,7 @@ const linksPopover = document.querySelector(".links-popover");
 const linksOpen = document.querySelector("[data-links-open]");
 const linksClose = document.querySelector(".links-popover__close");
 const photoTiles = Array.from(document.querySelectorAll(".photo-tile"));
+const lazyImages = Array.from(document.querySelectorAll("img[data-src]"));
 let currentPhotoIndex = 0;
 
 function setMenu(open) {
@@ -53,6 +54,31 @@ window.addEventListener(
   },
   { passive: true }
 );
+
+function loadImage(image) {
+  if (image.dataset.src) {
+    image.src = image.dataset.src;
+    image.removeAttribute("data-src");
+  }
+}
+
+if ("IntersectionObserver" in window) {
+  const imageObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          loadImage(entry.target);
+          imageObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: "250px 0px" }
+  );
+
+  lazyImages.forEach((image) => imageObserver.observe(image));
+} else {
+  lazyImages.forEach(loadImage);
+}
 
 function showPhoto(index) {
   currentPhotoIndex = (index + photoTiles.length) % photoTiles.length;
