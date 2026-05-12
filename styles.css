@@ -446,7 +446,8 @@ body.menu-open .library__nav {
   background: rgba(244, 244, 241, 0.78);
 }
 
-.links-popover[open] {
+.links-popover[open],
+.links-popover.is-open {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -574,6 +575,30 @@ body.menu-open .library__nav {
   color: var(--ink);
 }
 
+body.dialog-open {
+  overflow: hidden;
+}
+
+.lightbox.is-open,
+.links-popover.is-open,
+.privacy-dialog.is-open {
+  position: fixed;
+  z-index: 50;
+  margin: auto;
+}
+
+.lightbox.is-open {
+  inset: 18px;
+  display: grid;
+  place-items: center;
+}
+
+.privacy-dialog.is-open {
+  inset: 18px;
+  display: block;
+  overflow: auto;
+}
+
 .privacy-dialog::backdrop {
   background: rgba(244, 244, 241, 0.86);
 }
@@ -590,21 +615,21 @@ body.menu-open .library__nav {
 
 .privacy-dialog h1 {
   margin: 18px 0 26px;
-  font-size: clamp(1.45rem, 4vw, 3rem);
+  font-size: clamp(1.2rem, 3vw, 2.2rem);
   font-weight: 360;
   line-height: 1;
 }
 
 .privacy-dialog h2 {
   margin: 28px 0 10px;
-  font-size: 1rem;
+  font-size: 0.88rem;
   font-weight: 420;
 }
 
 .privacy-dialog p {
   margin: 0 0 14px;
   color: var(--ink);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   line-height: 1.55;
 }
 
